@@ -6,5 +6,5 @@ import publicApiClient from './clients/publicApiClient'
 
 export const authService = {
   login: (body: LoginRequestSchema) =>
-    publicApiClient.post<LoginResponseSchema>('/auth/login', body),
+    publicApiClient.post<LoginResponseSchema>('auth/login', body),
 }
