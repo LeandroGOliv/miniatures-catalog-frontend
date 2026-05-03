@@ -2,12 +2,13 @@ import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 export const baseApiClient = () =>
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   axios.create({
     baseURL: '/api',
     paramsSerializer: {
       indexes: null,
     },
-  })
+  }) as DataApiClient
 
 export interface DataApiClient extends AxiosInstance {
   get: <T = undefined>(url: string, config?: AxiosRequestConfig) => Promise<T>
