@@ -52,19 +52,35 @@ export default function LoginForm() {
   return (
     <>
       <UiForm methods={methods} id={'form-login'} onSubmit={onFormSubmit}>
-        <UiFormField label="Usuário:" name="username">
-          {(field) => (
-            <Input {...field} type="text" placeholder="Digite seu usuário" />
-          )}
-        </UiFormField>
-        <UiFormField label="Senha:" name="password">
-          {(field) => (
-            <Input {...field} type="password" placeholder="Digite sua senha" />
-          )}
-        </UiFormField>
-        <Button type="submit" loading={isPending}>
-          Acessar
-        </Button>
+        <div className="flex flex-col gap-4">
+          <div>
+            <UiFormField label="Usuário:" name="username">
+              {(field) => (
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="Digite seu usuário"
+                />
+              )}
+            </UiFormField>
+          </div>
+          <div>
+            <UiFormField label="Senha:" name="password">
+              {(field) => (
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="Digite sua senha"
+                />
+              )}
+            </UiFormField>
+          </div>
+          <div>
+            <Button type="submit" loading={isPending} className="w-full">
+              Acessar
+            </Button>
+          </div>
+        </div>
       </UiForm>
     </>
   )

@@ -7,8 +7,10 @@ export const Route = createFileRoute('/_unauthenticated/login')({
 
 function RouteComponent() {
   return (
-    <>
-      <LoginForm />
-    </>
+    <div className="w-dvw h-dvh flex justify-center items-center">
+      <div className="max-lg:w-80 w-md p-6">
+        <LoginForm />
+      </div>
+    </div>
   )
 }

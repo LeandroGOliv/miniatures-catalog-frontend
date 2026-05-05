@@ -26,7 +26,7 @@ export default function UiFormField({
         name={name}
         control={control}
         render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
+          <Field data-invalid={fieldState.invalid} className="gap-1">
             <FieldLabel htmlFor={name}>{label}</FieldLabel>
             {children({
               ...field,
