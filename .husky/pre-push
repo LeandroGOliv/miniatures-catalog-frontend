@@ -1,0 +1,10 @@
+if [ -f .env ]; then
+  export $(grep -v '^#' .env | sed 's/#.*//' | xargs)
+fi
+
+if [ "$HUSKY" = "0" ]; then 
+  echo "🐺 HUSKY: Desativado através do .env com HUSKY=0. Pulando testes de erros..."
+  exit 0
+fi
+
+npm run errors:html
