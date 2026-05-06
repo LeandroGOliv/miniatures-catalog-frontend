@@ -12,8 +12,10 @@ import UiForm from '#/components/ui/form/Form'
 import UiFormField from '#/components/ui/form/FormField'
 import { Input } from '@/components/ui/input'
 import { Button } from '#/components/ui/button'
+import { redirect, useNavigate } from '@tanstack/react-router'
 
 export default function LoginForm() {
+  const navigate = useNavigate()
   const [isPending, setIsPending] = useState(false)
   const { login } = useAuthStore()
 
@@ -32,7 +34,9 @@ export default function LoginForm() {
     },
     onSuccess: async (authResponse) => {
       await login(authResponse.user, authResponse.token)
+      setIsPending(false)
       toast.success('Logado com sucesso!')
+      navigate({ to: '/crud' })
     },
     onError: (error: unknown) => {
       setIsPending(false)

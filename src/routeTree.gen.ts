@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UnauthenticatedLoginRouteImport } from './routes/_unauthenticated/login'
+import { Route as AuthenticatedCrudRouteImport } from './routes/_authenticated/crud'
+import { Route as PublicMiniaturesIndexRouteImport } from './routes/_public/miniatures/index'
+import { Route as PublicMiniaturesIdRouteImport } from './routes/_public/miniatures/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +25,64 @@ const UnauthenticatedLoginRoute = UnauthenticatedLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCrudRoute = AuthenticatedCrudRouteImport.update({
+  id: '/_authenticated/crud',
+  path: '/crud',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicMiniaturesIndexRoute = PublicMiniaturesIndexRouteImport.update({
+  id: '/_public/miniatures/',
+  path: '/miniatures/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicMiniaturesIdRoute = PublicMiniaturesIdRouteImport.update({
+  id: '/_public/miniatures/$id',
+  path: '/miniatures/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/crud': typeof AuthenticatedCrudRoute
   '/login': typeof UnauthenticatedLoginRoute
+  '/miniatures/$id': typeof PublicMiniaturesIdRoute
+  '/miniatures/': typeof PublicMiniaturesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/crud': typeof AuthenticatedCrudRoute
   '/login': typeof UnauthenticatedLoginRoute
+  '/miniatures/$id': typeof PublicMiniaturesIdRoute
+  '/miniatures': typeof PublicMiniaturesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated/crud': typeof AuthenticatedCrudRoute
   '/_unauthenticated/login': typeof UnauthenticatedLoginRoute
+  '/_public/miniatures/$id': typeof PublicMiniaturesIdRoute
+  '/_public/miniatures/': typeof PublicMiniaturesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths: '/' | '/crud' | '/login' | '/miniatures/$id' | '/miniatures/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/_unauthenticated/login'
+  to: '/' | '/crud' | '/login' | '/miniatures/$id' | '/miniatures'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated/crud'
+    | '/_unauthenticated/login'
+    | '/_public/miniatures/$id'
+    | '/_public/miniatures/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedCrudRoute: typeof AuthenticatedCrudRoute
   UnauthenticatedLoginRoute: typeof UnauthenticatedLoginRoute
+  PublicMiniaturesIdRoute: typeof PublicMiniaturesIdRoute
+  PublicMiniaturesIndexRoute: typeof PublicMiniaturesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +101,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnauthenticatedLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/crud': {
+      id: '/_authenticated/crud'
+      path: '/crud'
+      fullPath: '/crud'
+      preLoaderRoute: typeof AuthenticatedCrudRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/miniatures/': {
+      id: '/_public/miniatures/'
+      path: '/miniatures'
+      fullPath: '/miniatures/'
+      preLoaderRoute: typeof PublicMiniaturesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/miniatures/$id': {
+      id: '/_public/miniatures/$id'
+      path: '/miniatures/$id'
+      fullPath: '/miniatures/$id'
+      preLoaderRoute: typeof PublicMiniaturesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedCrudRoute: AuthenticatedCrudRoute,
   UnauthenticatedLoginRoute: UnauthenticatedLoginRoute,
+  PublicMiniaturesIdRoute: PublicMiniaturesIdRoute,
+  PublicMiniaturesIndexRoute: PublicMiniaturesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
