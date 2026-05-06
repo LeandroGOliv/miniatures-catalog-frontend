@@ -89,7 +89,14 @@ function FormControl({
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   const { error, id } = useFormField()
 
-  return <input id={id} {...props} />
+  return (
+    <input
+      id={id}
+      aria-invalid={!!error}
+      aria-describedby={error ? `${id}-error` : undefined}
+      {...props}
+    />
+  )
 }
 
 function FormDescription({
