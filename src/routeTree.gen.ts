@@ -9,26 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthenticatedRouteRouteImport } from './routes/_unauthenticated/route'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UnauthenticatedLoginRouteImport } from './routes/_unauthenticated/login'
 import { Route as AuthenticatedCrudRouteImport } from './routes/_authenticated/crud'
 import { Route as PublicMiniaturesIndexRouteImport } from './routes/_public/miniatures/index'
 import { Route as PublicMiniaturesIdRouteImport } from './routes/_public/miniatures/$id'
 
+const UnauthenticatedRouteRoute = UnauthenticatedRouteRouteImport.update({
+  id: '/_unauthenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UnauthenticatedLoginRoute = UnauthenticatedLoginRouteImport.update({
-  id: '/_unauthenticated/login',
+  id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => UnauthenticatedRouteRoute,
 } as any)
 const AuthenticatedCrudRoute = AuthenticatedCrudRouteImport.update({
-  id: '/_authenticated/crud',
+  id: '/crud',
   path: '/crud',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const PublicMiniaturesIndexRoute = PublicMiniaturesIndexRouteImport.update({
   id: '/_public/miniatures/',
@@ -58,6 +68,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_unauthenticated': typeof UnauthenticatedRouteRouteWithChildren
   '/_authenticated/crud': typeof AuthenticatedCrudRoute
   '/_unauthenticated/login': typeof UnauthenticatedLoginRoute
   '/_public/miniatures/$id': typeof PublicMiniaturesIdRoute
@@ -71,6 +83,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/_unauthenticated'
     | '/_authenticated/crud'
     | '/_unauthenticated/login'
     | '/_public/miniatures/$id'
@@ -79,14 +93,28 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedCrudRoute: typeof AuthenticatedCrudRoute
-  UnauthenticatedLoginRoute: typeof UnauthenticatedLoginRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  UnauthenticatedRouteRoute: typeof UnauthenticatedRouteRouteWithChildren
   PublicMiniaturesIdRoute: typeof PublicMiniaturesIdRoute
   PublicMiniaturesIndexRoute: typeof PublicMiniaturesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_unauthenticated': {
+      id: '/_unauthenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof UnauthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -99,14 +127,14 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof UnauthenticatedLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof UnauthenticatedRouteRoute
     }
     '/_authenticated/crud': {
       id: '/_authenticated/crud'
       path: '/crud'
       fullPath: '/crud'
       preLoaderRoute: typeof AuthenticatedCrudRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_public/miniatures/': {
       id: '/_public/miniatures/'
@@ -125,10 +153,32 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCrudRoute: typeof AuthenticatedCrudRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCrudRoute: AuthenticatedCrudRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface UnauthenticatedRouteRouteChildren {
+  UnauthenticatedLoginRoute: typeof UnauthenticatedLoginRoute
+}
+
+const UnauthenticatedRouteRouteChildren: UnauthenticatedRouteRouteChildren = {
+  UnauthenticatedLoginRoute: UnauthenticatedLoginRoute,
+}
+
+const UnauthenticatedRouteRouteWithChildren =
+  UnauthenticatedRouteRoute._addFileChildren(UnauthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticatedCrudRoute: AuthenticatedCrudRoute,
-  UnauthenticatedLoginRoute: UnauthenticatedLoginRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  UnauthenticatedRouteRoute: UnauthenticatedRouteRouteWithChildren,
   PublicMiniaturesIdRoute: PublicMiniaturesIdRoute,
   PublicMiniaturesIndexRoute: PublicMiniaturesIndexRoute,
 }
